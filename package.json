@@ -1,0 +1,16 @@
+{
+	"dependencies": {
+		"onoff": "^3.2.9"
+	},
+	"name": "max6675",
+	"version": "0.0.1",
+	"main": "index.js",
+	"devDependencies": {},
+	"scripts": {
+		"test": "node test.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"description": ""
+}
