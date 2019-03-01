@@ -1,16 +1,15 @@
-const Max6675 = require(".");
+const Max6675 = require("./index");
 
-const CS = 7;
-const SCK = 18;
-const SO = 22;
+const CS = 4;
+const SCK = 5;
+const SO = 6;
 
 (async () => {
 	const max = new Max6675(CS, SCK, SO, 1);
-	let value;
 	while (1) {
-		value = await max.readTemp(CS);
-		console.log(value);
-		await max.sleep(200);
+		const { temp, time, unit } = max.readTemp();
+		console.log(time, ":", temp, unit);
+		await max.sleep(2000);
 	}
 })();
 
@@ -22,8 +21,6 @@ const SO = 22;
 // 	console.log(c[i])
 // 	value += (parseInt(c[i]) * Math.pow(2, i));
 // }
-
-
 
 // value *= 0.25
 // console.log(value)

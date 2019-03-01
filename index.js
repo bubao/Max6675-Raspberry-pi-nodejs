@@ -14,9 +14,10 @@ module.exports = class Max6675 {
 		this.SCK = SCK;
 		this.SO = SO;
 		this.UNIT = UNIT;
+		if (this.CS && this.SCK && this.SO && this.UNIT) this.setPin(this.CS, this.SCK, this.SO, this.UNIT);
 		process.on('SIGINT', () => {
-			console.log('Max6675 exit now!');
 			this.stop(() => {
+				console.log('Max6675 exit now!');
 				process.exit();
 			});
 		});
@@ -35,7 +36,7 @@ module.exports = class Max6675 {
 		this.SO = SO || this.SO;
 		this.UNIT = UNIT || this.UNIT;
 
-		this.cs = new Gpio(this.CS, "high");
+		this.cs = new Gpio(this.CS, "low");
 		this.sck = new Gpio(this.SCK, "low");
 		this.so = new Gpio(this.SO, "in");
 	}
@@ -62,7 +63,6 @@ module.exports = class Max6675 {
 			this.sck.writeSync(0);
 			this.sck.unexport();
 		} if (this.so) {
-			this.so.writeSync(0);
 			this.so.unexport();
 		}
 		cb();
@@ -74,33 +74,30 @@ module.exports = class Max6675 {
 	 * @returns
 	 */
 	async readTemp() {
-		this.cs.writeSync(0);
-		await sleep(2);
-		this.cs.writeSync(1);
-		await sleep(220);
-
-		this.cs.writeSync(1);
-		this.sck.writeSync(1);
-		await sleep(1);
-		this.sck.writeSync(0);
 		let value = 0;
 		let temp = 0;
+		let unit = "";
+
+		this.cs.writeSync(0, 2);
+		this.cs.writeSync(1);
+		await this.sleep(200);
+		this.cs.writeSync(0);
+		this.sck.writeSync(1, 1);
+		this.sck.writeSync(0);
 
 		for (let i = 11; i > -1; --i) {
 			this.sck.writeSync(1);
-			value = value + (this.so.readSync() * (Math.pow(2, i)));
+			value += this.so.readSync() * Math.pow(2, i);
 			this.sck.writeSync(0);
 		}
 		this.sck.writeSync(1);
-		this.so.readSync();
+		const error_tc = this.so.readSync();
 		this.sck.writeSync(0);
-		for (let i = 2; i > 0; i++) {
-			this.sck.writeSync(1);
-			await sleep(1);
-			this.sck.writeSync(0);
+		for (let i = 2; i > 0; i--) {
+			this.sck.writeSync(1, 1);
+			this.sck.writeSync(0, 1);
 		}
-		this.sck.writeSync(1);
-		await sleep(1);
+		this.sck.writeSync(1, 1);
 		this.sck.writeSync(0);
 		switch (this.UNIT) {
 			case 0:
@@ -108,14 +105,20 @@ module.exports = class Max6675 {
 				break;
 			case 1:
 				temp = value * 0.25;
+				temp = temp.toFixed(2);
+				unit = "°F";
 				break;
 			case 2:
 				temp = value * 0.25 * 9 / 5 + 32;
+				temp = temp.toFixed(2);
+				unit = "°F";
 				break;
 			default:
 				break;
 		}
 		if (error_tc != 0) return new Error("error: can't get temp");
-		else return temp;
+		else return {
+			temp, unit, time: new Date
+		};
 	}
 }
