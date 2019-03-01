@@ -2,7 +2,13 @@
 
 Read the temperature with K-type thermocouple. Raspberry pi NodeJS.
 
-Change vlues in `test.js`.
+Get the code from github.
+
+```sh
+git clone https://github.com/bubao/Max6675-Raspberry-pi-nodejs.git
+```
+
+Change values in `test.js`.
 
 ```js
 const CS = 7;
@@ -15,6 +21,7 @@ const SO = 22;
 Install dependency packages.
 
 ```shell
+cd Max6675-Raspberry-pi-nodejs
 npm i
 ```
 
