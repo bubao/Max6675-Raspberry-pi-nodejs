@@ -1,8 +1,8 @@
 const Max6675 = require("./index");
 
 const CS = 4;
-const SCK = 5;
-const SO = 6;
+const SCK = 24;
+const SO = 25;
 
 (async () => {
 	const max = new Max6675(CS, SCK, SO, 1);
