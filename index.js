@@ -21,7 +21,7 @@ module.exports = class Max6675 {
 		process.on('SIGINT', this[stop]);
 	}
 
-	[stop](this, cb = () => process.exit()) {
+	[stop](cb = () => process.exit()) {
 		if (this.cs) {
 			this.cs.writeSync(0);
 			this.cs.unexport();
