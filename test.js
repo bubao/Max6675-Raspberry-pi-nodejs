@@ -7,8 +7,8 @@ const SO = 25;
 (async () => {
 	const max = new Max6675(CS, SCK, SO, 1);
 	while (1) {
-		const { temp, time, unit } = max.readTemp();
-		console.log(time + ":" + temp + unit);
+		const { temp, unit } = max.readTemp();
+		console.log(new Date + ":" + temp + unit);
 		await max.sleep(2000);
 	}
 })();
