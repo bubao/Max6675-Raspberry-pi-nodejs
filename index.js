@@ -1,7 +1,7 @@
 const { Gpio } = require("onoff");
 const stop = Symbol('stop');
 const getValue = Symbol('getValue');
-const getValue = Symbol('getValue');
+const bin2dec = Symbol('bin2dec');
 
 module.exports = class Max6675 {
 	/**
