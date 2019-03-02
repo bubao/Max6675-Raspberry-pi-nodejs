@@ -18,7 +18,7 @@ module.exports = class Max6675 {
 		this.SO = SO;
 		this.UNIT = UNIT;
 		if (this.CS && this.SCK && this.SO && this.UNIT) this.setPin(this.CS, this.SCK, this.SO, this.UNIT);
-		process.on('SIGINT', this[stop]);
+		process.on('SIGINT', () => this[stop]());
 	}
 
 	[stop](cb = () => process.exit()) {
