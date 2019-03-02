@@ -79,6 +79,7 @@ module.exports = class Max6675 {
 
 	format(value, UNIT = 1) {
 		let temp;
+		let unit;
 		switch (UNIT) {
 			case 1:
 				temp = value * 0.25;
