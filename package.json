@@ -10,7 +10,7 @@
 		"test": "node test.js"
 	},
 	"keywords": [],
-	"author": "",
+	"author": "bubao",
 	"license": "MIT",
 	"description": ""
 }
