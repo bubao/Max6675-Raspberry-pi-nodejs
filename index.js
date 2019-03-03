@@ -129,6 +129,7 @@ module.exports = class Max6675 {
 		error_tc.forEach(element => {
 			if (element !== 0) error_tc += 1
 		});
+		console.log(error_tc)
 		if (error_tc !== 0) return new Error("error: can't get temp");
 		return results;
 	}
