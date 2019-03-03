@@ -126,7 +126,7 @@ module.exports = class Max6675 {
 		const error_tc = this[getValue]();
 		this.cs.writeSync(1);
 
-		const { temp, unit } = this.format(value, this.UNIT);
+		const { temp, unit } = this[format](value, this.UNIT);
 
 		if (error_tc != 0) return new Error("error: can't get temp");
 		return {
