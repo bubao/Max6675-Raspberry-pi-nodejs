@@ -2,7 +2,7 @@
 
 在树莓派上使用 Node.js 驱动 Max6675 芯片，读取K型热偶的温度值。
 
-![test](./Max6675.svg)
+![test](./imgs/Max6675.png)
 
 ## API
 
@@ -79,4 +79,4 @@ const UNIT = 1;
 
 引用一张[`https://github.com/splitbrain/rpibplusleaf`](https://github.com/splitbrain/rpibplusleaf)的图片。
 
-[![rpiblusleaf16](rpiblusleaf16.svg)](https://github.com/splitbrain/rpibplusleaf)
+[![rpiblusleaf16](./imgs/rpiblusleaf16.svg)](https://github.com/splitbrain/rpibplusleaf)
