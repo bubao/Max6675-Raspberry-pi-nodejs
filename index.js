@@ -70,7 +70,7 @@ module.exports = class Max6675 {
 	setPin(CS, SCK, SO, UNIT) {
 		this.CS = CS || this.CS;
 		this.SCK = SCK || this.SCK;
-		this.SO = this[isArray](SO) ? SO : (typeof SO ? [].push(SO) : this.SO);
+		this.SO = this[isArray](SO) ? SO : (typeof SO === "number" ? [].push(SO) : this.SO);
 		this.UNIT = UNIT || this.UNIT;
 
 		if (this.SO.length() === 0) {
