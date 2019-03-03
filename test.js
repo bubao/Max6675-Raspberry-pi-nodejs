@@ -8,11 +8,12 @@ const SO = [12, 16, 20, 21];
 (async () => {
 	const max = new Max6675(CS, SCK, SO, 1);
 	while (1) {
-		let Temp = max.readTemp();
-		console.log(Temp);
-		Temp.temp.forEach(item => {
-			console.log(new Date + ":" + item + Temp.unit);
-		});
+		const { temp, unit } = max.readTemp();
+		console.log(temp);
+		console.log(unit)
+		temp.map(item => {
+			console.log(new Date + ":" + item + unit);
+		})
 		await max.sleep(2000);
 	}
 })();
