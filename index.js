@@ -17,6 +17,7 @@ module.exports = class Max6675 {
 	constructor(CS, SCK, SO, UNIT = 1) {
 		this.CS = CS;
 		this.SCK = SCK;
+		console.log(SO)
 		this.SO = this[isArray](SO) ? SO : (typeof SO === "number" ? [].push(SO) : []);
 		this.UNIT = UNIT;
 		if (this.CS && this.SCK && this.SO && this.UNIT) this.setPin(this.CS, this.SCK, this.SO, this.UNIT);
