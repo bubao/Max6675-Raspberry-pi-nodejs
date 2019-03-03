@@ -3,7 +3,7 @@
 		"onoff": "^3.2.9"
 	},
 	"name": "max6675-raspi",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"main": "index.js",
 	"devDependencies": {},
 	"scripts": {
