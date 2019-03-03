@@ -58,7 +58,6 @@ module.exports = class Max6675 {
 				return value[index];
 			});
 		}
-		console.log(arr)
 		return arr;
 	}
 	/**
@@ -126,10 +125,9 @@ module.exports = class Max6675 {
 		const error_tc = this[getValue]();
 		this.cs.writeSync(1);
 
-		if (error_tc != 0) return new Error("error: can't get temp");
-		console.log(value)
 		const results = this[format](value, this.UNIT);
-		console.log(results)
+
+		if (error_tc !== 0) return new Error("error: can't get temp");
 		return results;
 	}
 }
