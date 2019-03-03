@@ -128,7 +128,7 @@ module.exports = class Max6675 {
 		const results = this[format](value, this.UNIT);
 		let error = 0;
 		error_tc.forEach(element => {
-			if (element === 0) error += 1
+			if (element !== 0) error += 1
 		});
 		console.log(error)
 		if (error_tc !== 0) return new Error("error: can't get temp");
