@@ -130,7 +130,6 @@ module.exports = class Max6675 {
 		error_tc.forEach(element => {
 			if (element !== 0) error += 1
 		});
-		console.log(error_tc)
 		if (error !== 0) return { temp: [], unit: "" };
 		return results;
 	}

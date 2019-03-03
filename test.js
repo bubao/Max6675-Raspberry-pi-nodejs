@@ -8,7 +8,6 @@ const SO = [25, 12, 16, 20, 21];
 	const max = new Max6675(CS, SCK, SO, 1);
 	while (1) {
 		const result = max.readTemp();
-		console.log(result)
 		const { temp, unit } = result;
 		temp.map(item => {
 			console.log(new Date + ":" + item + unit);
