@@ -9,7 +9,8 @@ const SO = [26, 27, 28, 29];
 	const max = new Max6675(CS, SCK, SO, 1);
 	while (1) {
 		const { temp, unit } = max.readTemp();
-		temp.map((item, index) => {
+		console.log(temp);
+		temp.map(item => {
 			console.log(new Date + ":" + item + unit);
 		})
 		await max.sleep(2000);
