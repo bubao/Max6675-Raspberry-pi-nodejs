@@ -17,7 +17,7 @@ module.exports = class Max6675 {
 	constructor(CS, SCK, SO, UNIT = 1) {
 		this.CS = CS;
 		this.SCK = SCK;
-		this.SO = this[isArray](SO) ? SO : (typeof SO ? [].push(SO) : []);
+		this.SO = this[isArray](SO) ? SO : (typeof SO === "number" ? [].push(SO) : []);
 		this.UNIT = UNIT;
 		if (this.CS && this.SCK && this.SO && this.UNIT) this.setPin(this.CS, this.SCK, this.SO, this.UNIT);
 		process.on('SIGINT', () => this[stop]());
@@ -69,6 +69,7 @@ module.exports = class Max6675 {
 	 */
 	setPin(CS, SCK, SO, UNIT) {
 		this.CS = CS || this.CS;
+		console.log(this.SO)
 		this.SCK = SCK || this.SCK;
 		this.SO = this[isArray](SO) ? SO : (typeof SO === "number" ? [].push(SO) : this.SO);
 		this.UNIT = UNIT || this.UNIT;
