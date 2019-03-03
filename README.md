@@ -16,5 +16,5 @@ npm i max6675-raspi --save
 
 ## GPIO
 
-[![rpiblusleaf16](https://github.com/splitbrain/rpibplusleaf/raw/master/rpiblusleaf.svg?sanitize=true)](https://github.com/splitbrain/rpibplusleaf)
+[![rpiblusleaf](https://raw.githubusercontent.com/splitbrain/rpibplusleaf/master/rpiblusleaf.png)](https://github.com/splitbrain/rpibplusleaf)
 
