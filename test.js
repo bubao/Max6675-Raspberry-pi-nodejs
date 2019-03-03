@@ -10,9 +10,9 @@ const SO = [12, 16, 20, 21];
 	while (1) {
 		const { temp, unit } = max.readTemp();
 		console.log(temp);
-		temp.map(item => {
+		temp.forEach(item => {
 			console.log(new Date + ":" + item + unit);
-		})
+		});
 		await max.sleep(2000);
 	}
 })();
