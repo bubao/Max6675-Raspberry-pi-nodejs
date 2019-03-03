@@ -105,7 +105,6 @@ module.exports = class Max6675 {
 			unit = "°F";
 		} else {
 			temp = value;
-			unit = "°C";
 		}
 		return { temp, unit };
 	}
