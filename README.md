@@ -12,8 +12,8 @@ Get the code from npmjs.
 npm i max6675-raspi --save
 ```
 
-![Max6675.png](./imgs/Max6675.png)
+[Max6675](https://github.com/bubao/Max6675-Raspberry-pi-nodejs/blob/master/imgs/Max6675.png)
 
 ## GPIO
 
-[![rpiblusleaf16](./imgs/rpiblusleaf16.svg)](https://github.com/splitbrain/rpibplusleaf)
+[![rpiblusleaf16](https://github.com/bubao/Max6675-Raspberry-pi-nodejs/blob/master/imgs/rpiblusleaf16.svg)](https://github.com/splitbrain/rpibplusleaf)
