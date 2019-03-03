@@ -2,15 +2,12 @@ const Max6675 = require("./index");
 
 const CS = 4;
 const SCK = 24;
-// const SO = 25;
-const SO = [12, 16, 20, 21];
+const SO = [5, 6, 13, 19, 26];
 
 (async () => {
 	const max = new Max6675(CS, SCK, SO, 1);
 	while (1) {
 		const { temp, unit } = max.readTemp();
-		console.log(temp);
-		console.log(unit)
 		temp.map(item => {
 			console.log(new Date + ":" + item + unit);
 		})
