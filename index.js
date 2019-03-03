@@ -49,9 +49,10 @@ module.exports = class Max6675 {
 
 	[bin2dec]() {
 		let arr = [];
+		let value = [];
 		for (let i = 11; i > -1; --i) {
 			// value += this[getValue]() * Math.pow(2, i);
-			value += this[getValue]() << i;
+			// value += this[getValue]() << i;
 			arr = this[getValue]().map((item, index) => {
 				value[index] = (value[index] || 0) + item * Math.pow(2, i);
 				return value[index];
