@@ -83,4 +83,4 @@ const UNIT = 1;
 
 引用一张 [`https://github.com/splitbrain/rpibplusleaf`](https://github.com/splitbrain/rpibplusleaf) 的图片。
 
-[![rpiblusleaf16](https://github.com/bubao/Max6675-Raspberry-pi-nodejs/raw/master/imgs/rpiblusleaf16.svg?sanitize=true)](https://github.com/splitbrain/rpibplusleaf)
+[![rpiblusleaf16](https://github.com/splitbrain/rpibplusleaf/raw/master/rpiblusleaf.svg?sanitize=true)](https://github.com/splitbrain/rpibplusleaf)
