@@ -2,15 +2,19 @@
 	"dependencies": {
 		"onoff": "^3.2.9"
 	},
-	"name": "max6675",
+	"name": "max6675-raspi",
 	"version": "0.0.1",
 	"main": "index.js",
 	"devDependencies": {},
 	"scripts": {
-		"test": "node test.js"
+		"test": "node ./test/test.js"
 	},
-	"keywords": [],
+	"keywords": [
+		"raspi",
+		"raspberrypi",
+		"max6675"
+	],
 	"author": "bubao",
 	"license": "MIT",
-	"description": ""
+	"description": "Read the temperature with K-type thermocouple. Raspberry pi NodeJS."
 }
