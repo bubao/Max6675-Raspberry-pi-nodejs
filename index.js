@@ -51,8 +51,6 @@ module.exports = class Max6675 {
 		let arr = [];
 		let value = [];
 		for (let i = 11; i > -1; --i) {
-			// value += this[getValue]() * Math.pow(2, i);
-			// value += this[getValue]() << i;
 			arr = this[getValue]().map((item, index) => {
 				value[index] = (value[index] || 0) + item * Math.pow(2, i);
 				return value[index];
@@ -128,9 +126,10 @@ module.exports = class Max6675 {
 		const results = this[format](value, this.UNIT);
 		let error = 0;
 		error_tc.forEach(element => {
-			if (element !== 0) error += 1
+			if (element !== 0) error += 1;
 		});
-		if (error !== 0) return { temp: [], unit: "" };
+		results.prototype.error_tc = error_tc;
+		if (error !== 0) return { temp: [], unit: "", error_tc };
 		return results;
 	}
 }
