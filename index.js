@@ -19,6 +19,7 @@ module.exports = class Max6675 {
 		this.SCK = SCK;
 		console.log(SO)
 		this.SO = this[isArray](SO) ? SO : (typeof SO === "number" ? [].push(SO) : []);
+		console.log(this.SO)
 		this.UNIT = UNIT;
 		if (this.CS && this.SCK && this.SO && this.UNIT) this.setPin(this.CS, this.SCK, this.SO, this.UNIT);
 		process.on('SIGINT', () => this[stop]());
