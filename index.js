@@ -58,6 +58,7 @@ module.exports = class Max6675 {
 				return value[index];
 			});
 		}
+		console.log(arr)
 		return arr;
 	}
 	/**
