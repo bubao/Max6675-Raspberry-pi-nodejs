@@ -2,6 +2,8 @@ const { Gpio } = require("onoff");
 const stop = Symbol('stop');
 const getValue = Symbol('getValue');
 const bin2dec = Symbol('bin2dec');
+const isArray = Symbol('isArray');
+const format = Symbol('format');
 
 module.exports = class Max6675 {
 	/**
@@ -15,10 +17,14 @@ module.exports = class Max6675 {
 	constructor(CS, SCK, SO, UNIT = 1) {
 		this.CS = CS;
 		this.SCK = SCK;
-		this.SO = SO;
+		this.SO = this[isArray](SO) ? SO : (typeof SO ? [].push(SO) : []);
 		this.UNIT = UNIT;
 		if (this.CS && this.SCK && this.SO && this.UNIT) this.setPin(this.CS, this.SCK, this.SO, this.UNIT);
 		process.on('SIGINT', () => this[stop]());
+	}
+
+	[isArray](obj) {
+		return Object.prototype.toString.call(obj) == '[object Array]';
 	}
 
 	[stop](cb = () => process.exit()) {
@@ -29,25 +35,29 @@ module.exports = class Max6675 {
 			this.sck.writeSync(0);
 			this.sck.unexport();
 		} if (this.so) {
-			this.so.unexport();
+			this.so.map(item, () => item.unexport());
 		}
 		cb();
 	}
 
 	[getValue]() {
 		this.sck.writeSync(1);
-		const value = this.so.readSync();
+		const value = this.so.map(item, () => item.readSync());
 		this.sck.writeSync(0);
 		return value;
 	}
 
 	[bin2dec]() {
-		let value = 0;
+		let arr = [];
 		for (let i = 11; i > -1; --i) {
 			// value += this[getValue]() * Math.pow(2, i);
 			value += this[getValue]() << i;
+			arr = this[getValue]().map((item, index) => {
+				value[index] = (value[index] || 0) + item * Math.pow(2, i);
+				return value[index];
+			});
 		}
-		return value;
+		return arr;
 	}
 	/**
 	 * @description setPin
@@ -60,12 +70,18 @@ module.exports = class Max6675 {
 	setPin(CS, SCK, SO, UNIT) {
 		this.CS = CS || this.CS;
 		this.SCK = SCK || this.SCK;
-		this.SO = SO || this.SO;
+		this.SO = this[isArray](SO) ? SO : (typeof SO ? [].push(SO) : this.SO);
 		this.UNIT = UNIT || this.UNIT;
 
-		this.cs = new Gpio(this.CS, "low");
-		this.sck = new Gpio(this.SCK, "low");
-		this.so = new Gpio(this.SO, "in");
+		if (this.SO.length() === 0) {
+			console.log("You must assign a value to SO!");
+			delete this;
+			process.exit();
+		} else {
+			this.cs = new Gpio(this.CS, "low");
+			this.sck = new Gpio(this.SCK, "low");
+			this.so = this.SO.map(item, () => new Gpio(item, "in"));
+		}
 	}
 	/**
 	 * @description delay
@@ -77,21 +93,19 @@ module.exports = class Max6675 {
 		return new Promise(resolve => setTimeout(resolve, ms));
 	}
 
-	format(value, UNIT = 1) {
+	[format](value, UNIT = 1) {
 		let temp;
-		let unit;
-		switch (UNIT) {
-			case 1:
-				temp = value * 0.25;
-				unit = "°C";
-				break;
-			case 2:
-				temp = value * 0.25 * 9 / 5 + 32;
-				unit = "°F";
-				break;
-			default:
-				temp = value;
-				break;
+		let unit = "";
+
+		if (UNIT === 1) {
+			temp = value.map(v => (v * 0.25).toFixed(2));
+			unit = "°C";
+		} else if (UNIT === 2) {
+			temp = value.map(v => (v * 0.25 * 9 / 5 + 32).toFixed(2));
+			unit = "°F";
+		} else {
+			temp = value;
+			unit = "°C";
 		}
 		return { temp, unit };
 	}
@@ -116,7 +130,7 @@ module.exports = class Max6675 {
 
 		if (error_tc != 0) return new Error("error: can't get temp");
 		return {
-			temp: temp.toFixed(2),
+			temp,
 			unit
 		};
 	}
