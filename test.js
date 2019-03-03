@@ -7,7 +7,9 @@ const SO = [5, 6, 13, 19, 26];
 (async () => {
 	const max = new Max6675(CS, SCK, SO, 1);
 	while (1) {
-		const { temp, unit } = max.readTemp();
+		const result = max.readTemp();
+		console.log(result)
+		const { temp, unit } = result;
 		temp.map(item => {
 			console.log(new Date + ":" + item + unit);
 		})
