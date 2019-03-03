@@ -17,9 +17,7 @@ module.exports = class Max6675 {
 	constructor(CS, SCK, SO, UNIT = 1) {
 		this.CS = CS;
 		this.SCK = SCK;
-		console.log(typeof SO === "number")
 		this.SO = this[isArray](SO) ? SO : (typeof SO === "number" ? [SO] : []);
-		console.log(this.SO)
 		this.UNIT = UNIT;
 		if (this.CS && this.SCK && this.SO && this.UNIT) this.setPin(this.CS, this.SCK, this.SO, this.UNIT);
 		process.on('SIGINT', () => this[stop]());
@@ -37,14 +35,14 @@ module.exports = class Max6675 {
 			this.sck.writeSync(0);
 			this.sck.unexport();
 		} if (this.so) {
-			this.so.map(item, () => item.unexport());
+			this.so.map(item => item.unexport());
 		}
 		cb();
 	}
 
 	[getValue]() {
 		this.sck.writeSync(1);
-		const value = this.so.map(item, () => item.readSync());
+		const value = this.so.map(item => item.readSync());
 		this.sck.writeSync(0);
 		return value;
 	}
@@ -71,11 +69,9 @@ module.exports = class Max6675 {
 	 */
 	setPin(CS, SCK, SO, UNIT) {
 		this.CS = CS || this.CS;
-		console.log(this.SO)
 		this.SCK = SCK || this.SCK;
 		this.SO = this[isArray](SO) ? SO : (typeof SO === "number" ? [SO] : this.SO);
 		this.UNIT = UNIT || this.UNIT;
-		console.log(this.SO)
 		if (this.SO.length === 0) {
 			console.log("You must assign a value to SO!");
 			delete this;
@@ -83,7 +79,7 @@ module.exports = class Max6675 {
 		} else {
 			this.cs = new Gpio(this.CS, "low");
 			this.sck = new Gpio(this.SCK, "low");
-			this.so = this.SO.map(item, () => new Gpio(item, "in"));
+			this.so = this.SO.map(item => new Gpio(item, "in"));
 		}
 	}
 	/**
