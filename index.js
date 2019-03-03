@@ -126,11 +126,10 @@ module.exports = class Max6675 {
 		this.cs.writeSync(1);
 
 		const { temp, unit } = this[format](value, this.UNIT);
-		console.log(temp)
 
 		if (error_tc != 0) return new Error("error: can't get temp");
 		return {
-			temp,
+			temp: temp,
 			unit
 		};
 	}
