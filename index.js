@@ -72,7 +72,7 @@ module.exports = class Max6675 {
 		this.SCK = SCK || this.SCK;
 		this.SO = this[isArray](SO) ? SO : (typeof SO === "number" ? [].push(SO) : this.SO);
 		this.UNIT = UNIT || this.UNIT;
-
+		console.log(this.SO)
 		if (this.SO.length() === 0) {
 			console.log("You must assign a value to SO!");
 			delete this;
