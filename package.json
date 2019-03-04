@@ -1,6 +1,6 @@
 {
   "name": "max6675-raspi",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "index.js",
   "devDependencies": {},
   "dependencies": {
