@@ -1,20 +1,31 @@
 {
-	"dependencies": {
-		"onoff": "^3.2.9"
-	},
-	"name": "max6675-raspi",
-	"version": "0.0.7",
-	"main": "index.js",
-	"devDependencies": {},
-	"scripts": {
-		"test": "node ./test/test.js"
-	},
-	"keywords": [
-		"raspi",
-		"raspberrypi",
-		"max6675"
-	],
-	"author": "bubao",
-	"license": "MIT",
-	"description": "Read the temperature with K-type thermocouple. Raspberry pi NodeJS."
+  "name": "max6675-raspi",
+  "version": "0.0.7",
+  "main": "index.js",
+  "devDependencies": {},
+  "dependencies": {
+    "onoff": "^3.2.9"
+  },
+  "scripts": {
+    "test": "node ./test/test.js"
+  },
+  "keywords": [
+    "raspi",
+    "raspberrypi",
+    "max6675"
+  ],
+  "author": "bubao",
+  "license": "MIT",
+  "description": "Read the temperature with K-type thermocouple. Raspberry pi NodeJS.",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bubao/Max6675-Raspberry-pi-nodejs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bubao/Max6675-Raspberry-pi-nodejs/issues"
+  },
+  "homepage": "https://github.com/bubao/Max6675-Raspberry-pi-nodejs#readme"
 }
