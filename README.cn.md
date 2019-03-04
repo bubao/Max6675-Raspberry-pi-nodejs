@@ -2,7 +2,7 @@
 
 [![NPM version](https://img.shields.io/npm/v/max6675-raspi.svg)](https://www.npmjs.com/package/max6675-raspi)
 
-中文|[English](./REAME.md)
+中文|[English](./README.md)
 
 在树莓派上使用 Node.js 驱动 Max6675 芯片，读取 K 型热偶的温度值。
 

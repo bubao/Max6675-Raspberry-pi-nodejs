@@ -2,7 +2,7 @@
 
 [![NPM version](https://img.shields.io/npm/v/max6675-raspi.svg)](https://www.npmjs.com/package/max6675-raspi)
 
-English|[中文](./REAME.cn.md)
+English|[中文](./README.cn.md)
 
 Read the temperature with K-type thermocouple. Raspberry pi NodeJS.
 
