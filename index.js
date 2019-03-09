@@ -1,5 +1,4 @@
 const { Gpio } = require("onoff");
-const stop = Symbol('stop');
 const getValue = Symbol('getValue');
 const bin2dec = Symbol('bin2dec');
 const isArray = Symbol('isArray');
@@ -20,14 +19,14 @@ module.exports = class Max6675 {
 		this.SO = this[isArray](SO) ? SO : (typeof SO === "number" ? [SO] : []);
 		this.UNIT = UNIT;
 		if (this.CS && this.SCK && this.SO && this.UNIT) this.setPin(this.CS, this.SCK, this.SO, this.UNIT);
-		process.on('SIGINT', () => this[stop]());
+		process.on('SIGINT', () => this.stop());
 	}
 
 	[isArray](obj) {
 		return Object.prototype.toString.call(obj) == '[object Array]';
 	}
 
-	[stop](cb = () => process.exit()) {
+	stop(cb = () => process.exit()) {
 		if (this.cs) {
 			this.cs.writeSync(0);
 			this.cs.unexport();
