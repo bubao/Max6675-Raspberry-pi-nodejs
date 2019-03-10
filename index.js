@@ -127,7 +127,7 @@ module.exports = class Max6675 {
 		error_tc.forEach(element => {
 			if (element !== 0) error += 1;
 		});
-		results.prototype.error_tc = error_tc;
+		results.error_tc = error_tc;
 		if (error !== 0) return { temp: [], unit: "", error_tc };
 		return results;
 	}
