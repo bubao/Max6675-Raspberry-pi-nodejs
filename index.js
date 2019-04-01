@@ -8,9 +8,9 @@ module.exports = class Max6675 {
 	/**
 	 *Creates an instance of Max6675.
 	 * @author bubao
-	 * @param {number} cs
-	 * @param {number} sck
-	 * @param {number} so
+	 * @param {number} cs Chip select
+	 * @param {number} sck CMOS clock
+	 * @param {number} so Serial data output
 	 * @param {number} [unit=1]
 	 */
 	constructor(cs, sck, so, unit = 1) {
@@ -65,10 +65,10 @@ module.exports = class Max6675 {
 	/**
 	 * @description setPin
 	 * @author bubao
-	 * @param {number} cs
-	 * @param {number} sck
-	 * @param {number} so
-	 * @param {number} unit
+	 * @param {number} cs Chip select
+	 * @param {number} sck CMOS clock
+	 * @param {number} so Serial data output
+	 * @param {number} [unit=1]
 	 */
 	setPin(cs, sck, so, unit) {
 		this.cs = cs || this.cs;
