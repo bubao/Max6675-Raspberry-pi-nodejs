@@ -4,10 +4,10 @@ const CS = 4;
 const SCK = 24;
 const SO = [25, 12, 16, 20, 21];
 const UNIT = 1;
+const max = new Max6675();
+max.setPin(CS, SCK, SO, UNIT);
 
 (async () => {
-	const max = new Max6675();
-	max.setPin(CS, SCK, SO, UNIT);
 	while (1) {
 		const { temp, unit } = max.readTemp();
 		if (temp.length)
