@@ -1,42 +1,47 @@
 const { Gpio } = require("onoff");
-const getValue = Symbol('getValue');
-const bin2dec = Symbol('bin2dec');
-const isArray = Symbol('isArray');
-const format = Symbol('format');
+const getValue = Symbol("getValue");
+const bin2dec = Symbol("bin2dec");
+const isArray = Symbol("isArray");
+const format = Symbol("format");
 
 module.exports = class Max6675 {
 	/**
 	 *Creates an instance of Max6675.
 	 * @author bubao
-	 * @param {number} CS
-	 * @param {number} SCK
-	 * @param {number} SO
-	 * @param {number} [UNIT=1]
+	 * @param {number} cs
+	 * @param {number} sck
+	 * @param {number} so
+	 * @param {number} [unit=1]
 	 */
-	constructor(CS, SCK, SO, UNIT = 1) {
-		this.CS = CS;
-		this.SCK = SCK;
-		this.SO = this[isArray](SO) ? SO : (typeof SO === "number" ? [SO] : []);
-		this.UNIT = UNIT;
-		if (this.CS && this.SCK && this.SO && this.UNIT) this.setPin(this.CS, this.SCK, this.SO, this.UNIT);
-		process.on('SIGINT', () => this.stop());
+	constructor(cs, sck, so, unit = 1) {
+		this.cs = cs;
+		this.sck = sck;
+		this.so = this[isArray](so) ? so : typeof so === "number" ? [so] : [];
+		this.unit = unit;
+		if (this.cs && this.sck && this.so && this.unit)
+			this.setPin(this.cs, this.sck, this.so, this.unit);
+		process.on("SIGINT", () => this.stop());
 	}
 
 	[isArray](obj) {
-		return Object.prototype.toString.call(obj) == '[object Array]';
+		return Object.prototype.toString.call(obj) == "[object Array]";
 	}
 
-	stop(cb = () => process.exit()) {
+	stop() {
 		if (this.cs) {
 			this.cs.writeSync(0);
 			this.cs.unexport();
-		} if (this.sck) {
+		}
+		if (this.sck) {
 			this.sck.writeSync(0);
 			this.sck.unexport();
-		} if (this.so) {
-			this.so.map(item => item.unexport());
 		}
-		cb();
+		if (this.so)
+			this.so.map(item => {
+				item.writeSync(0);
+				item.unexport();
+			});
+		process.exit();
 	}
 
 	[getValue]() {
@@ -60,24 +65,27 @@ module.exports = class Max6675 {
 	/**
 	 * @description setPin
 	 * @author bubao
-	 * @param {number} CS
-	 * @param {number} SCK
-	 * @param {number} SO
-	 * @param {number} UNIT
+	 * @param {number} cs
+	 * @param {number} sck
+	 * @param {number} so
+	 * @param {number} unit
 	 */
-	setPin(CS, SCK, SO, UNIT) {
-		this.CS = CS || this.CS;
-		this.SCK = SCK || this.SCK;
-		this.SO = this[isArray](SO) ? SO : (typeof SO === "number" ? [SO] : this.SO);
-		this.UNIT = UNIT || this.UNIT;
-		if (this.SO.length === 0) {
-			console.log("You must assign a value to SO!");
-			delete this;
-			process.exit();
+	setPin(cs, sck, so, unit) {
+		this.cs = cs || this.cs;
+		this.sck = sck || this.sck;
+		this.so = this[isArray](so)
+			? so
+			: typeof so === "number"
+			? [so]
+			: this.so;
+		this.unit = unit || this.unit;
+		if (this.so.length === 0) {
+			console.error("You must assign a value to so!");
+			this.stop();
 		} else {
-			this.cs = new Gpio(this.CS, "low");
-			this.sck = new Gpio(this.SCK, "low");
-			this.so = this.SO.map(item => new Gpio(item, "in"));
+			this.cs = new Gpio(this.cs, "low");
+			this.sck = new Gpio(this.sck, "low");
+			this.so = this.so.map(item => new Gpio(item, "in"));
 		}
 	}
 	/**
@@ -90,20 +98,26 @@ module.exports = class Max6675 {
 		return new Promise(resolve => setTimeout(resolve, ms));
 	}
 
-	[format](value, UNIT = 1) {
-		let temp;
-		let unit = "";
-
-		if (UNIT === 1) {
-			temp = value.map(v => (v * 0.25).toFixed(2));
-			unit = "°C";
-		} else if (UNIT === 2) {
-			temp = value.map(v => (v * 0.25 * 9 / 5 + 32).toFixed(2));
-			unit = "°F";
-		} else {
-			temp = value;
+	[format]() {
+		switch (this.unit) {
+			case 1:
+				return {
+					temp: this[bin2dec]().map(v => (v * 0.25).toFixed(2)),
+					unit: "°C"
+				};
+			case 2:
+				return {
+					temp: this[bin2dec]().map(v =>
+						((v * 0.25 * 9) / 5 + 32).toFixed(2)
+					),
+					unit: "°F"
+				};
+			default:
+				return {
+					temp: this[bin2dec](),
+					unit: ""
+				};
 		}
-		return { temp, unit };
 	}
 
 	/**
@@ -113,17 +127,17 @@ module.exports = class Max6675 {
 	 */
 	readTemp() {
 		if (!(this.cs && this.sck && this.so)) return;
-		this.cs.writeSync(0, 2);
+		this.cs.writeSync(0);
 		this.cs.writeSync(1, 200);
 		this.cs.writeSync(0);
 
 		this[getValue]();
-		const value = this[bin2dec]();
+		const results = this[format]();
 		const error_tc = this[getValue]();
 		this.cs.writeSync(1);
 
-		const results = this[format](value, this.UNIT);
 		let error = 0;
+
 		error_tc.forEach(element => {
 			if (element !== 0) error += 1;
 		});
@@ -131,4 +145,4 @@ module.exports = class Max6675 {
 		if (error !== 0) return { temp: [], unit: "", error_tc };
 		return results;
 	}
-}
+};

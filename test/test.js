@@ -9,7 +9,7 @@ const UNIT = 1;
 	const max = new Max6675(CS, SCK, SO, UNIT);
 	while (1) {
 		const { temp, unit } = max.readTemp();
-		temp.map(item => console.log(new Date + ":" + item + unit));
+		temp.map(item => console.log(new Date() + ":" + item + unit));
 		await max.sleep(2000);
 	}
 })();
