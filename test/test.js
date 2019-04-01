@@ -8,10 +8,10 @@ const max6675 = new Max6675();
 max6675.setPin(CS, SCK, SO, UNIT);
 
 (async () => {
-	while (1) {
+	while (true) {
 		const { temp, unit } = max6675.readTemp();
 		if (temp.length)
 			console.log(`${new Date()}:${temp.map(item => item + unit)}`);
-		await max.sleep(2000);
+		await max6675.sleep(2000);
 	}
 })();
