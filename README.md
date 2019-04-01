@@ -1,8 +1,6 @@
 # Max6675
 
-[![NPM version](https://img.shields.io/npm/v/max6675-raspi.svg)](https://www.npmjs.com/package/max6675-raspi)
-
-English|[中文](./README.cn.md)
+[![NPM version](https://img.shields.io/npm/v/max6675-raspi.svg)](https://www.npmjs.com/package/max6675-raspi) [![jaywcjlove/sb](https://jaywcjlove.github.io/sb/lang/chinese.svg)](README.cn.md)
 
 Read the temperature with K-type thermocouple. Raspberry pi NodeJS.
 
@@ -17,4 +15,3 @@ npm i max6675-raspi --save
 ## GPIO
 
 [![rpiblusleaf](https://raw.githubusercontent.com/splitbrain/rpibplusleaf/master/rpiblusleaf.png)](https://github.com/splitbrain/rpibplusleaf)
-
