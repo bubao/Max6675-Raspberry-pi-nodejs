@@ -10,7 +10,7 @@ module.exports = class Max6675 {
 	 * @author bubao
 	 * @param {number} cs Chip select
 	 * @param {number} sck CMOS clock
-	 * @param {number} so Serial data output
+	 * @param {number | array} so Serial data output
 	 * @param {number} [unit=1]
 	 */
 	constructor(cs, sck, so, unit = 1) {
@@ -63,22 +63,23 @@ module.exports = class Max6675 {
 		return arr;
 	}
 	/**
-	 * @description setPin
+	 * @description
 	 * @author bubao
 	 * @param {number} cs Chip select
 	 * @param {number} sck CMOS clock
-	 * @param {number} so Serial data output
+	 * @param {number | array} so Serial data output
 	 * @param {number} [unit=1]
+	 * @returns this
 	 */
-	setPin(cs, sck, so, unit) {
-		this.cs = cs || this.cs;
-		this.sck = sck || this.sck;
+	setPin(cs = this.cs, sck = this.sck, so, unit = this.unit) {
+		this.cs = cs;
+		this.sck = sck;
+		this.unit = unit;
 		this.so = this[isArray](so)
 			? so
 			: typeof so === "number"
 			? [so]
 			: this.so;
-		this.unit = unit || this.unit;
 		if (this.so.length === 0) {
 			console.error("You must assign a value to so!");
 			this.stop();
@@ -86,6 +87,7 @@ module.exports = class Max6675 {
 			this.cs = new Gpio(this.cs, "low");
 			this.sck = new Gpio(this.sck, "low");
 			this.so = this.so.map(item => new Gpio(item, "in"));
+			return this;
 		}
 	}
 	/**
