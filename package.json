@@ -1,13 +1,26 @@
 {
   "name": "max6675-raspi",
   "version": "0.0.12",
-  "main": "index.js",
-  "devDependencies": {},
+  "main": "src/index.js",
+  "devDependencies": {
+    "prettier": "^2.0.2",
+    "rimraf": "^3.0.2",
+    "tslint": "^6.1.1",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.8.3"
+  },
   "dependencies": {
+    "@types/node": "^13.9.8",
     "onoff": "^3.2.9"
   },
   "scripts": {
-    "test": "node ./test/test.js"
+    "test": "node ./test/test.js",
+    "clean": "rimraf lib && rimraf coverage",
+    "format": "prettier --write \"{src,__tests__}/**/*.ts\" --trailing-comma es5",
+    "lint": "tslint --force --format verbose \"src/**/*.ts\"",
+    "prepublishOnly": "npm run build",
+    "prebuild": "npm run clean && npm run format && npm run lint && echo Using TypeScript && tsc --version",
+    "build": "tsc --pretty"
   },
   "keywords": [
     "raspi",

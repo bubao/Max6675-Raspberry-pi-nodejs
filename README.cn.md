@@ -55,7 +55,7 @@ max6675.setPin(CS, SCK, SO, UNIT);
 
 ### `readTemp`
 
-在设定了`CS`，`SCK`，`SO`和`UNIT`(默认值为`1`)后，即能调用这个方法来获取值。
+在设定了`CS`，`SCK`，`SO`和`UNIT`（默认值为`1`) 后，即能调用这个方法来获取值。
 
 ```js
 const Max6675 = require("max6675-raspi");
@@ -73,7 +73,7 @@ console.log(`${new Date()}:${temp.map(item => item + unit)}`);
 `setPin`之后也可以立即调用`readTemp`
 
 ```js
-const Max6675 = require("max6675-raspi");
+const { Max6675 } = require("max6675-raspi");
 
 const CS = 4;
 const SCK = 24;
@@ -89,7 +89,7 @@ console.log(`${new Date()}:${temp.map(item => item + unit)}`);
 这是个用`Promise`封装的延时器。当你需要循环获取值，但又不想自己写延时器的时候，可以像下面一样使用这个`sleep`方法。
 
 ```js
-const Max6675 = require("max6675-raspi");
+const { Max6675 } = require("max6675-raspi");
 
 const CS = 4;
 const SCK = 24;
