@@ -1,7 +1,7 @@
 {
   "name": "max6675-raspi",
   "version": "0.0.12",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "devDependencies": {
     "prettier": "^2.0.2",
     "rimraf": "^3.0.2",

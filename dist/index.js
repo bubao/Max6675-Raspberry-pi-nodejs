@@ -1,12 +1,12 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 /*
  * @Description:
  * @Author: bubao
  * @Date: 2020-04-02 21:02:00
  * @LastEditors: bubao
- * @LastEditTime: 2020-04-02 23:28:34
+ * @LastEditTime: 2020-04-04 10:57:59
  */
+// tslint:disable-next-line:no-var-requires
 const { Gpio } = require("onoff");
 // import { Gpio } from "onoff";
 class Max6675 {
@@ -144,5 +144,4 @@ class Max6675 {
         return Object.assign(Object.assign({}, results), { error_tc: ErrorTc });
     }
 }
-exports.Max6675 = Max6675;
-exports.default = Max6675;
+module.exports = Max6675;

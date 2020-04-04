@@ -3,12 +3,13 @@
  * @Author: bubao
  * @Date: 2020-04-02 21:02:00
  * @LastEditors: bubao
- * @LastEditTime: 2020-04-02 23:28:34
+ * @LastEditTime: 2020-04-04 10:57:59
  */
+// tslint:disable-next-line:no-var-requires
 const { Gpio } = require("onoff");
 // import { Gpio } from "onoff";
 
-export class Max6675 {
+class Max6675 {
   sck: number;
   cs: number;
   so: number | number[];
@@ -172,4 +173,5 @@ export class Max6675 {
   }
 }
 
-export default Max6675;
+// export default Max6675;
+export = Max6675;
