@@ -97,7 +97,7 @@ max6675.setPin(CS, SCK, SO, UNIT);
     while (true) {
         const { temp, unit } = await max6675.readTemp();
         if (temp.length)
-    console.log(`${new Date()}:${temp.map(item => item + unit)}`);
+            console.log(`${new Date()}:${temp.map(item => item + unit)}`);
         await max6675.sleep(2000);
     }
 })();
