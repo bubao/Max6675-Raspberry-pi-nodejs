@@ -3,77 +3,72 @@
  * @Author: bubao
  * @Date: 2020-04-02 21:02:00
  * @LastEditors: bubao
- * @LastEditTime: 2020-04-04 10:57:59
+ * @LastEditTime: 2020-04-04 14:33:12
  */
 // tslint:disable-next-line:no-var-requires
 const { Gpio } = require("onoff");
-// import { Gpio } from "onoff";
+import { isArray, verifyGpio } from "./utils";
 
 class Max6675 {
-  sck: number;
-  cs: number;
-  so: number | number[];
-  unit: number;
-  CS: any;
-  SCK: any;
-  SO: any;
+  private unit: number;
+  private CS: any;
+  private SCK: any;
+  private SO: any;
 
   /**
    * Creates an instance of Max6675.
    * @author bubao
    * @param {number} cs Chip select
    * @param {number} sck CMOS clock
-   * @param {number | array} so Serial data output
+   * @param {(number | number[])} so Serial data output
    * @param {number} [unit=1]
+   * @memberof Max6675
    */
   constructor(
-    cs: number,
-    sck: number,
-    so: number | number[],
+    cs?: number,
+    sck?: number,
+    so?: number | number[],
     unit: number = 1
   ) {
-    this.cs = cs;
-    this.sck = sck;
-    this.so = this.isArray(so) ? so : typeof so === "number" ? [so] : [];
     this.unit = unit;
-    if (this.cs && this.sck && this.so && this.unit)
-      this.setPin(this.cs, this.sck, this.so, this.unit);
-    process.on("SIGINT", () => this.stop());
+    so = this.makdeSo(so);
+    if (cs && sck && so.length && verifyGpio(cs, sck, so)) {
+      this.setPin(cs, sck, so, unit);
+    }
+
+    process.on("SIGINT", this.stop);
   }
 
-  private isArray(obj: number | number[]): boolean {
-    return Object.prototype.toString.call(obj) === "[object Array]";
-  }
-
-  stop() {
+  async stop() {
     if (this.CS) {
-      this.CS.writeSync(0);
+      await this.CS.write(0);
       this.CS.unexport();
     }
     if (this.SCK) {
-      this.SCK.writeSync(0);
+      await this.SCK.write(0);
       this.SCK.unexport();
     }
     if (this.SO)
-      this.SO.map((item: any) => {
-        item.writeSync(0);
+      this.SO.map(async (item: any) => {
+        await item.write(0);
         item.unexport();
       });
     process.exit();
   }
 
-  private getValue(): number[] {
-    this.SCK.writeSync(1);
-    const value = this.SO.map((item: any) => item.readSync());
-    this.SCK.writeSync(0);
+  private async getValue() {
+    await this.SCK.write(1);
+    // tslint:disable-next-line:no-return-await
+    const value: number[] = this.SO.map(async (item: any) => await item.read());
+    await this.SCK.write(0);
     return value;
   }
 
-  private bin2dec(): number[] {
+  private async bin2dec() {
     let arr: number[] = [];
     const value: number[] = [];
     for (let i = 11; i > -1; --i) {
-      arr = this.getValue().map((item: number, index: number) => {
+      arr = (await this.getValue()).map((item: number, index: number) => {
         value[index] = (value[index] || 0) + item * Math.pow(2, i);
         return value[index];
       });
@@ -85,31 +80,24 @@ class Max6675 {
    * @author bubao
    * @param {number} cs Chip select
    * @param {number} sck CMOS clock
-   * @param {number | array} so Serial data output
+   * @param {(number | number[])} so Serial data output
    * @param {number} [unit=1]
    */
-  setPin(
-    cs = this.cs,
-    sck = this.sck,
-    so: number | number[],
-    unit = this.unit
-  ) {
-    this.cs = cs;
-    this.sck = sck;
+  setPin(cs: number, sck: number, so: number | number[], unit = 1) {
     this.unit = unit;
-    this.so = this.makdeSo(so);
-    if (this.so.length === 0) {
+    so = this.makdeSo(so);
+    if (!(so.length !== 0 && !verifyGpio(cs, sck, so))) {
       this.stop();
       throw new Error("You must assign a value to so!");
     } else {
-      this.CS = new Gpio(this.cs, "low");
-      this.SCK = new Gpio(this.sck, "low");
-      this.SO = this.so.map((item: number) => new Gpio(item, "in"));
+      this.CS = new Gpio(cs, "low");
+      this.SCK = new Gpio(sck, "low");
+      this.SO = so.map((item: number) => new Gpio(item, "in"));
     }
   }
 
   private makdeSo(so: any): number[] {
-    return this.isArray(so) ? so : typeof so === "number" ? [so] : [];
+    return isArray(so) ? so : typeof so === "number" ? [so] : [];
   }
   /**
    * @description delay
@@ -121,23 +109,39 @@ class Max6675 {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  private format(): object {
+  /**
+   *
+   * @author bubao
+   * @date 2020-04-04
+   * @private
+   * @returns Promise<{
+   *    temp: string[];
+   *    unit: string;
+   * } | {
+   *    temp: number[];
+   *    unit: string;
+   * }>
+   * @memberof Max6675
+   */
+  private async format() {
     switch (this.unit) {
       case 1:
         return {
-          temp: this.bin2dec().map((v: number) => (v * 0.25).toFixed(2)),
+          temp: (await this.bin2dec()).map((v: number) =>
+            (v * 0.25).toFixed(2)
+          ),
           unit: "°C",
         };
       case 2:
         return {
-          temp: this.bin2dec().map((v: number) =>
+          temp: (await this.bin2dec()).map((v: number) =>
             ((v * 0.25 * 9) / 5 + 32).toFixed(2)
           ),
           unit: "°F",
         };
       default:
         return {
-          temp: this.bin2dec(),
+          temp: await this.bin2dec(),
           unit: "",
         };
     }
@@ -146,18 +150,26 @@ class Max6675 {
   /**
    * @description read temp
    * @author bubao
-   * @returns
+   * @returns Promise<{
+   *      temp?: undefined;
+   *      unit?: undefined;
+   *      error_tc?: undefined;
+   *  } | {
+   *      temp: any[];
+   *      unit: string;
+   *      error_tc: number[];
+   *  }>
    */
-  readTemp() {
-    if (!(this.CS && this.SCK && this.SO)) return;
-    this.CS.writeSync(0);
-    this.CS.writeSync(1, 200);
-    this.CS.writeSync(0);
+  async readTemp() {
+    if (!(this.CS && this.SCK && this.SO)) return {};
+    await this.CS.write(0);
+    await this.CS.write(1, 200);
+    await this.CS.write(0);
 
-    this.getValue();
-    const results = this.format();
-    const ErrorTc = this.getValue();
-    this.CS.writeSync(1);
+    await this.getValue();
+    const results = await this.format();
+    const ErrorTc = await this.getValue();
+    await this.CS.write(1);
 
     let error = 0;
 
@@ -172,6 +184,4 @@ class Max6675 {
     return { ...results, error_tc: ErrorTc };
   }
 }
-
-// export default Max6675;
 export = Max6675;

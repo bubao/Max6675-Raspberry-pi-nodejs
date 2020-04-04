@@ -8,7 +8,16 @@
 npm i max6675-raspi --save
 ```
 
+```ts
+// js
+const Max6675 = require("max6675-raspi")
+// ts
+//import Max6675 from "max6675-raspi"
+```
+
 ![Max6675](https://github.com/bubao/Max6675-Raspberry-pi-nodejs/raw/master/imgs/Max6675.png)
+
+> 0.0.12 以及之前的版本 readTemp 是同步函数，之后改为 Promise
 
 ## API
 
@@ -66,21 +75,7 @@ const SO = [25, 12, 16, 20, 21];
 const UNIT = 1;
 const max6675 = new Max6675();
 max6675.setPin(CS, SCK, SO, UNIT);
-const { temp, unit } = max6675.readTemp();
-console.log(`${new Date()}:${temp.map(item => item + unit)}`);
-```
-
-`setPin`之后也可以立即调用`readTemp`
-
-```js
-const Max6675 = require("max6675-raspi");
-
-const CS = 4;
-const SCK = 24;
-const SO = [25, 12, 16, 20, 21];
-const UNIT = 1;
-const max6675 = new Max6675();
-const { temp, unit } = max6675.setPin(CS, SCK, SO, UNIT).readTemp();
+const { temp, unit } = await max6675.readTemp();
 console.log(`${new Date()}:${temp.map(item => item + unit)}`);
 ```
 
@@ -100,7 +95,7 @@ max6675.setPin(CS, SCK, SO, UNIT);
 
 (async () => {
     while (true) {
-        const { temp, unit } = max6675.readTemp();
+        const { temp, unit } = await max6675.readTemp();
         if (temp.length)
     console.log(`${new Date()}:${temp.map(item => item + unit)}`);
         await max6675.sleep(2000);

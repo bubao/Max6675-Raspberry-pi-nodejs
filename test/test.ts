@@ -1,12 +1,11 @@
-/**
+/*
  * @Description: 
  * @Author: bubao
- * @Date: 2019-02-27 23:17:02
+ * @Date: 2020-04-04 14:10:25
  * @LastEditors: bubao
- * @LastEditTime: 2020-04-04 13:29:31
+ * @LastEditTime: 2020-04-04 14:13:10
  */
-// import Max6675 from "../src";
-const Max6675 = require('../dist')
+import Max6675 from "../src"
 const CS = 4;
 const SCK = 24;
 const SO = [25, 12, 16, 20, 21];
