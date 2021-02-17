@@ -26,10 +26,10 @@ const max6675 = new Max6675(CS, SCK, SO, UNIT);
 
 可以接收 4 个参数：
 
--   `CS`: Max6675 模块的`CS`脚对应的树莓派的 GPIO 号。
--   `SCK`: Max6675 模块的`SCK`脚对应的树莓派的 GPIO 号。
--   `SO`: Max6675 模块的`SO`脚对应的树莓派的 GPIO 号，可以接收一个数组，也可以接收一个整数。
--   `UNIT`: 设置结果输出单位，`1`为`°C`，`0`为`°F`，不传参数则默认值为`1`，传其他值则直接返回`Max6675`芯片的二进制数转十进制数值。
+- `CS`: Max6675 模块的`CS`脚对应的树莓派的 GPIO 号。
+- `SCK`: Max6675 模块的`SCK`脚对应的树莓派的 GPIO 号。
+- `SO`: Max6675 模块的`SO`脚对应的树莓派的 GPIO 号，可以接收一个数组，也可以接收一个整数。
+- `UNIT`: 设置结果输出单位，`1`为`°C`，`0`为`°F`，不传参数则默认值为`1`，传其他值则直接返回`Max6675`芯片的二进制数转十进制数值。
 
 ### `setPin`
 
@@ -48,14 +48,14 @@ max6675.setPin(CS, SCK, SO, UNIT);
 
 如果你在`new Max6675()`的时候没有传参数，就可以调用这个方法设置针脚信息。与`Max6675`一样接收四个参数：
 
--   `CS`: Max6675 模块的`CS`脚对应的树莓派的 GPIO 号。
--   `SCK`: Max6675 模块的`SCK`脚对应的树莓派的 GPIO 号。
--   `SO`: Max6675 模块的`SO`脚对应的树莓派的 GPIO 号，可以接收一个数组，也可以接收一个整数。
--   `UNIT`: 设置结果输出单位，`1`为`°C`，`2`为`°F`，不传参数则默认值为`1`，传其他值则直接返回`Max6675`芯片的二进制数转十进制数值。
+- `CS`: Max6675 模块的`CS`脚对应的树莓派的 GPIO 号。
+- `SCK`: Max6675 模块的`SCK`脚对应的树莓派的 GPIO 号。
+- `SO`: Max6675 模块的`SO`脚对应的树莓派的 GPIO 号，可以接收一个数组，也可以接收一个整数。
+- `UNIT`: 设置结果输出单位，`1`为`°C`，`2`为`°F`，不传参数则默认值为`1`，传其他值则直接返回`Max6675`芯片的二进制数转十进制数值。
 
 ### `readTemp`
 
-在设定了`CS`，`SCK`，`SO`和`UNIT`(默认值为`1`)后，即能调用这个方法来获取值。
+在设定了`CS`，`SCK`，`SO`和`UNIT`（默认值为`1`) 后，即能调用这个方法来获取值。
 
 ```js
 const Max6675 = require("max6675-raspi");
@@ -99,18 +99,22 @@ const max6675 = new Max6675();
 max6675.setPin(CS, SCK, SO, UNIT);
 
 (async () => {
-	while (true) {
-		const { temp, unit } = max6675.readTemp();
-		if (temp.length)
-			console.log(`${new Date()}:${temp.map(item => item + unit)}`);
-		await max6675.sleep(2000);
-	}
+    while (true) {
+        const { temp, unit } = max6675.readTemp();
+        if (temp.length)
+            console.log(`${new Date()}:${temp.map(item => item + unit)}`);
+        await max6675.sleep(2000);
+    }
 })();
 ```
 
+![PIN](https://user-images.githubusercontent.com/13029001/107857184-c58d7100-6e67-11eb-93b1-8a4ebc9c9309.png)
+
+The PINs value is BCM GPIOs (green).
+
 ## GPIO
 
-这里特地提 GPIO，`SO`，`CS`，`SCK`的值，是树莓派上的 GPIO 号，不是针脚号。
+这里特地提 GPIO，`SO`，`CS`，`SCK`的值，是树莓派上的 BCM GPIO（绿色），不是针脚号。
 
 引用一张 [`https://github.com/splitbrain/rpibplusleaf`](https://github.com/splitbrain/rpibplusleaf) 的图片。
 

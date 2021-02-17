@@ -8,10 +8,10 @@ module.exports = class Max6675 {
 	/**
 	 *Creates an instance of Max6675.
 	 * @author bubao
-	 * @param {number} cs Chip select
-	 * @param {number} sck CMOS clock
-	 * @param {number | array} so Serial data output
-	 * @param {number} [unit=1]
+	 * @param {number} cs Chip select,BCM GPIO
+	 * @param {number} sck CMOS clock,BCM GPIO
+	 * @param {number | number[]} so Serial data output,BCM GPIO
+	 * @param {number} untit default 1,1:"°C",2:"°F".
 	 */
 	constructor(cs, sck, so, unit = 1) {
 		this.cs = cs;
@@ -63,12 +63,12 @@ module.exports = class Max6675 {
 		return arr;
 	}
 	/**
-	 * @description
+	 * @description set pins
 	 * @author bubao
-	 * @param {number} cs Chip select
-	 * @param {number} sck CMOS clock
-	 * @param {number | array} so Serial data output
-	 * @param {number} [unit=1]
+	 * @param {number} cs Chip select,BCM GPIO
+	 * @param {number} sck CMOS clock,BCM GPIO
+	 * @param {number | array} so Serial data output,BCM GPIO
+	 * @param {number} unit default 1 ,1:"°C",2:"°F".
 	 * @returns this
 	 */
 	setPin(cs = this.cs, sck = this.sck, so, unit = this.unit) {
@@ -125,7 +125,7 @@ module.exports = class Max6675 {
 	/**
 	 * @description read temp
 	 * @author bubao
-	 * @returns
+	 * @returns {{temp: string[],unit: string}}
 	 */
 	readTemp() {
 		if (!(this.cs && this.sck && this.so)) return;
