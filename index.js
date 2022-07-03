@@ -45,9 +45,9 @@ module.exports = class Max6675 {
 	}
 
 	[getValue]() {
-		this.sck.writeSync(1);
-		const value = this.so.map(item => item.readSync());
-		this.sck.writeSync(0);
+		this.SCK.writeSync(1);
+		const value = this.SO.map(item => item.readSync());
+		this.SCK.writeSync(0);
 		return value;
 	}
 
@@ -84,9 +84,9 @@ module.exports = class Max6675 {
 			console.error("You must assign a value to so!");
 			this.stop();
 		} else {
-			this.cs = new Gpio(this.cs, "low");
-			this.sck = new Gpio(this.sck, "low");
-			this.so = this.so.map(item => new Gpio(item, "in"));
+			this.CS = new Gpio(this.cs + "", "low");
+			this.SCK = new Gpio(this.sck + "", "low");
+			this.SO = this.so.map(item => new Gpio(item + "", "in"));
 			return this;
 		}
 	}
@@ -128,15 +128,15 @@ module.exports = class Max6675 {
 	 * @returns {{temp: string[],unit: string}}
 	 */
 	readTemp() {
-		if (!(this.cs && this.sck && this.so)) return;
-		this.cs.writeSync(0);
-		this.cs.writeSync(1, 200);
-		this.cs.writeSync(0);
+		if (!(this.CS && this.SCK && this.SO)) return;
+		this.CS.writeSync(0);
+		this.CS.writeSync(1, 200);
+		this.CS.writeSync(0);
 
 		this[getValue]();
 		const results = this[format]();
 		const error_tc = this[getValue]();
-		this.cs.writeSync(1);
+		this.CS.writeSync(1);
 
 		let error = 0;
 
