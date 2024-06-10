@@ -1,4 +1,4 @@
-const { Gpio } = require("onoff");
+const {Gpio} = require("onoff");
 const getValue = Symbol("getValue");
 const bin2dec = Symbol("bin2dec");
 const isArray = Symbol("isArray");
@@ -11,15 +11,16 @@ module.exports = class Max6675 {
 	 * @param {number} cs Chip select,BCM GPIO
 	 * @param {number} sck CMOS clock,BCM GPIO
 	 * @param {number | number[]} so Serial data output,BCM GPIO
-	 * @param {number} untit default 1,1:"°C",2:"°F".
+	 * @param {number} unit default 1,1:"°C",2:"°F".
 	 */
 	constructor(cs, sck, so, unit = 1) {
 		this.cs = cs;
 		this.sck = sck;
 		this.so = this[isArray](so) ? so : typeof so === "number" ? [so] : [];
 		this.unit = unit;
-		if (this.cs && this.sck && this.so && this.unit)
+		if (this.cs && this.sck && this.so && this.unit) {
 			this.setPin(this.cs, this.sck, this.so, this.unit);
+		}
 		process.on("SIGINT", () => this.stop());
 	}
 
@@ -28,19 +29,39 @@ module.exports = class Max6675 {
 	}
 
 	stop() {
-		if (this.cs) {
-			this.cs.writeSync(0);
-			this.cs.unexport();
+		if (this.CS) {
+			try {
+				this.CS.writeSync(0);
+				this.CS.unexport();
+			}
+			catch (e) {
+				//console.trace(e)
+			}
 		}
-		if (this.sck) {
-			this.sck.writeSync(0);
-			this.sck.unexport();
+		if (this.SCK) {
+			try {
+				this.SCK.writeSync(0);
+				this.SCK.unexport();
+			}
+			catch (e) {
+				//console.trace(e)
+			}
+
 		}
-		if (this.so)
-			this.so.map(item => {
-				item.writeSync(0);
-				item.unexport();
-			});
+
+		if (this.SO) {
+
+			try {
+				this.SO.map(item => {
+					item.writeSync(0);
+					item.unexport();
+				});
+			}
+			catch (e) {
+				//console.trace(e)
+			}
+		}
+
 		process.exit();
 	}
 
@@ -62,6 +83,7 @@ module.exports = class Max6675 {
 		}
 		return arr;
 	}
+
 	/**
 	 * @description set pins
 	 * @author bubao
@@ -78,18 +100,20 @@ module.exports = class Max6675 {
 		this.so = this[isArray](so)
 			? so
 			: typeof so === "number"
-			? [so]
-			: this.so;
+				? [so]
+				: this.so;
 		if (this.so.length === 0) {
 			console.error("You must assign a value to so!");
 			this.stop();
-		} else {
+		}
+		else {
 			this.CS = new Gpio(this.cs + "", "low");
 			this.SCK = new Gpio(this.sck + "", "low");
 			this.SO = this.so.map(item => new Gpio(item + "", "in"));
 			return this;
 		}
 	}
+
 	/**
 	 * @description delay
 	 * @author bubao
@@ -128,7 +152,9 @@ module.exports = class Max6675 {
 	 * @returns {{temp: string[],unit: string}}
 	 */
 	readTemp() {
-		if (!(this.CS && this.SCK && this.SO)) return;
+		if (!(this.CS && this.SCK && this.SO)) {
+			return;
+		}
 		this.CS.writeSync(0);
 		this.CS.writeSync(1, 200);
 		this.CS.writeSync(0);
@@ -141,10 +167,14 @@ module.exports = class Max6675 {
 		let error = 0;
 
 		error_tc.forEach(element => {
-			if (element !== 0) error += 1;
+			if (element !== 0) {
+				error += 1;
+			}
 		});
 		results.error_tc = error_tc;
-		if (error !== 0) return { temp: [], unit: "", error_tc };
+		if (error !== 0) {
+			return {temp: [], unit: "", error_tc};
+		}
 		return results;
 	}
 };

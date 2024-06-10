@@ -1,10 +1,10 @@
 {
   "name": "max6675-raspi",
-  "version": "0.0.13",
+  "version": "0.0.20",
   "main": "index.js",
   "devDependencies": {},
   "dependencies": {
-    "onoff": "^3.2.9"
+    "onoff": "^6.0.3"
   },
   "scripts": {
     "test": "node ./test/test.js"
@@ -22,10 +22,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bubao/Max6675-Raspberry-pi-nodejs.git"
+    "url": "git+https://github.com/schme16/Max6675-Raspberry-pi-nodejs.git"
   },
   "bugs": {
-    "url": "https://github.com/bubao/Max6675-Raspberry-pi-nodejs/issues"
+    "url": "https://github.com/schme16/Max6675-Raspberry-pi-nodejs/issues"
   },
-  "homepage": "https://github.com/bubao/Max6675-Raspberry-pi-nodejs#readme"
+  "homepage": "https://github.com/schme16/Max6675-Raspberry-pi-nodejs#readme"
 }
