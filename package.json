@@ -4,7 +4,7 @@
   "main": "index.js",
   "devDependencies": {},
   "dependencies": {
-    "onoff": "^3.2.9"
+    "onoff": "^6.0.3"
   },
   "scripts": {
     "test": "node ./test/test.js"

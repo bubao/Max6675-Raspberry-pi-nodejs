@@ -1,3 +1,4 @@
+
 # Max6675
 
 [![NPM version](https://img.shields.io/npm/v/max6675-raspi.svg)](https://www.npmjs.com/package/max6675-raspi) [![jaywcjlove/sb](https://jaywcjlove.github.io/sb/lang/english.svg)](README.md)
@@ -8,7 +9,7 @@
 npm i max6675-raspi --save
 ```
 
-![Max6675](https://github.com/bubao/Max6675-Raspberry-pi-nodejs/raw/master/imgs/Max6675.png)
+![Max6675](imgs/Max6675.png)
 
 ## API
 
@@ -18,18 +19,18 @@ npm i max6675-raspi --save
 const Max6675 = require("max6675-raspi");
 const CS = 4;
 const SCK = 24;
-const SO = [25, 12, 16, 20, 21];
+const SO = 25; // 只支持单个 SO 引脚，所有 MAX6675 的 SO 并联到此 GPIO
 const UNIT = 1;
 
 const max6675 = new Max6675(CS, SCK, SO, UNIT);
 ```
 
-可以接收 4 个参数：
+构造函数参数说明：
 
-- `CS`: Max6675 模块的`CS`脚对应的树莓派的 GPIO 号。
-- `SCK`: Max6675 模块的`SCK`脚对应的树莓派的 GPIO 号。
-- `SO`: Max6675 模块的`SO`脚对应的树莓派的 GPIO 号，可以接收一个数组，也可以接收一个整数。
-- `UNIT`: 设置结果输出单位，`1`为`°C`，`0`为`°F`，不传参数则默认值为`1`，传其他值则直接返回`Max6675`芯片的二进制数转十进制数值。
+- `CS`：Max6675 模块的 `CS` 脚对应的树莓派 GPIO 号。
+- `SCK`：Max6675 模块的 `SCK` 脚对应的树莓派 GPIO 号。
+- `SO`：Max6675 模块的 `SO` 脚对应的树莓派 GPIO 号，只能为单个整数（所有 MAX6675 的 SO 并联到此 GPIO）。
+- `UNIT`：设置结果输出单位，`1` 为 `°C`，`2` 为 `°F`，不传参数则默认值为 `1`，传其他值则直接返回 Max6675 芯片的二进制数转十进制数值。
 
 ### `setPin`
 
@@ -38,7 +39,7 @@ const Max6675 = require("max6675-raspi");
 
 const CS = 4;
 const SCK = 24;
-const SO = [25, 12, 16, 20, 21];
+const SO = 25;
 const UNIT = 1;
 
 // const max = new Max6675(CS, SCK, SO, UNIT);
@@ -46,28 +47,23 @@ const max6675 = new Max6675();
 max6675.setPin(CS, SCK, SO, UNIT);
 ```
 
-如果你在`new Max6675()`的时候没有传参数，就可以调用这个方法设置针脚信息。与`Max6675`一样接收四个参数：
-
-- `CS`: Max6675 模块的`CS`脚对应的树莓派的 GPIO 号。
-- `SCK`: Max6675 模块的`SCK`脚对应的树莓派的 GPIO 号。
-- `SO`: Max6675 模块的`SO`脚对应的树莓派的 GPIO 号，可以接收一个数组，也可以接收一个整数。
-- `UNIT`: 设置结果输出单位，`1`为`°C`，`2`为`°F`，不传参数则默认值为`1`，传其他值则直接返回`Max6675`芯片的二进制数转十进制数值。
+如果你在 `new Max6675()` 的时候没有传参数，可以调用此方法设置针脚信息。参数与构造函数一致。
 
 ### `readTemp`
 
-在设定了`CS`，`SCK`，`SO`和`UNIT`（默认值为`1`) 后，即能调用这个方法来获取值。
+在设定了`CS`，`SCK`，`SO`和`UNIT`（默认值为`1`） 后，即能调用这个方法来获取值。
 
 ```js
 const Max6675 = require("max6675-raspi");
 
 const CS = 4;
 const SCK = 24;
-const SO = [25, 12, 16, 20, 21];
+const SO = 25;
 const UNIT = 1;
 const max6675 = new Max6675();
 max6675.setPin(CS, SCK, SO, UNIT);
 const { temp, unit } = max6675.readTemp();
-console.log(`${new Date()}:${temp.map(item => item + unit)}`);
+console.log(`${new Date()}:${temp.map((item) => item + unit)}`);
 ```
 
 `setPin`之后也可以立即调用`readTemp`
@@ -77,42 +73,61 @@ const Max6675 = require("max6675-raspi");
 
 const CS = 4;
 const SCK = 24;
-const SO = [25, 12, 16, 20, 21];
+const SO = 25;
 const UNIT = 1;
 const max6675 = new Max6675();
 const { temp, unit } = max6675.setPin(CS, SCK, SO, UNIT).readTemp();
-console.log(`${new Date()}:${temp.map(item => item + unit)}`);
+console.log(`${new Date()}:${temp.map((item) => item + unit)}`);
 ```
 
 ### `sleep`
 
-这是个用`Promise`封装的延时器。当你需要循环获取值，但又不想自己写延时器的时候，可以像下面一样使用这个`sleep`方法。
+这是一个基于 Promise 的延时器，适合在异步循环中使用。例如：
 
 ```js
 const Max6675 = require("max6675-raspi");
+const max6675 = new Max6675(4, 24, 25, 1);
 
-const CS = 4;
-const SCK = 24;
-const SO = [25, 12, 16, 20, 21];
-const UNIT = 1;
-const max6675 = new Max6675();
-max6675.setPin(CS, SCK, SO, UNIT);
-
-(async () => {
+async function main() {
     while (true) {
         const { temp, unit } = max6675.readTemp();
-        if (temp.length)
-            console.log(`${new Date()}:${temp.map(item => item + unit)}`);
-        await max6675.sleep(2000);
+        console.log(`${new Date()}: ${temp[0]}${unit}`);
+        await max6675.sleep(1500);
     }
-})();
+}
+main();
 ```
 
-![PIN](https://user-images.githubusercontent.com/13029001/107857184-c58d7100-6e67-11eb-93b1-8a4ebc9c9309.png)
+## 多通道推荐用法
 
-The PINs value is BCM GPIOs (green).
+```js
+const Max6675 = require("max6675-raspi");
+// 标准 SPI：每个 Max6675 都有自己的 CS，所有人共享相同的 SO（MISO）
+const CS_LIST = [4, 17, 27, 22, 5]; // 示例：5 个 Max6675，每个有独立 CS
+const SCK = 24;
+const SO = 25; // 所有 SO 并联到这个 GPIO
+const UNIT = 1;
+const sensors = CS_LIST.map(cs => new Max6675(cs, SCK, SO, UNIT));
+
+async function main() {
+    while (true) {
+        for (let i = 0; i < sensors.length; i++) {
+            const { temp, unit } = sensors[i].readTemp() || { temp: [], unit: '' };
+            if (temp.length)
+                console.log(`${new Date()}: CS${CS_LIST[i]}: ${temp[0]}${unit}`);
+            else
+                console.log(`${new Date()}: CS${CS_LIST[i]}: read error`);
+        }
+        await sensors[0].sleep(1500);
+    }
+}
+main();
+```
 
 ## GPIO
+
+注意：SO 只支持单个 GPIO，所有 MAX6675 的 SO 引脚应物理并联到同一个树莓派 GPIO。
+每个 MAX6675 需独立 CS。
 
 这里特地提 GPIO，`SO`，`CS`，`SCK`的值，是树莓派上的 BCM GPIO（绿色），不是针脚号。
 
